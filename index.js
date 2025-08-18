@@ -9,7 +9,7 @@ dotenv.config();
 const port=5000;
 const app=express();
 
-mongoose.connect('mongodb+srv://akankshapawar131202:jiFN2vEfLVJdiFr4@cluster0.fvskhj9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0').then(()=>
+mongoose.connect(process.env.MONGO_URL).then(()=>
 console.log('Sucessfully connect with mongodb')).catch((error)=>{
     console.log('MongoDb failed to connect',error);
 });
