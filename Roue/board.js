@@ -1,5 +1,5 @@
 import express from 'express';
-import { addCard, createColumn, getColumn,addLablesCard,getCardData, updateCardLables } from '../controller/Column.js';
+import { addCard, createColumn, getColumn,getCardData, updateCardLables } from '../controller/Column.js';
 import authMiddleware from '../middleware/authentication.js';
 
 const boardRouter=express.Router();
