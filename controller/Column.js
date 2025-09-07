@@ -1,13 +1,13 @@
 import Column from "../Model/Column.model.js";
-
-export const getColumn=async(req ,res)=>{
+// fetch columns all cards data
+export const getColumn=async(req ,res)=>{  
 const columns=await Column.find();
 return res.status(200).json({
     status:'SUCCESS',
     message:"Data Fetch Successfully",
     columns});
 };
-
+// add cards in means whole cards
 export const createColumn=async(req,res)=>{
     const {title}=req.body;
     try{
@@ -25,6 +25,7 @@ export const createColumn=async(req,res)=>{
     }
 }
 
+//add cards while clicing on cards
 export const addCard=async(req,res)=>{
 const {columnId}=req.params;
 const{title,color,label,startDate,dueDate,attachments,createdAt,updatedAt}=req.body;
@@ -45,34 +46,8 @@ await column.save();
     }
 };
 
-export const addLablesCard=async(req,res)=>{
-const {cardId}=req.params;
-const{ labelTitle,labelColor }=req.body;
-try{
-const column=await Column.findOne({
-    userId:req.user.id,
-    'cards._id':cardId
-});
-console.log('column',column);
-console.log('console',cardId);
-if(!column)
-    return res.status(404).json({ message: 'Column or card not found' });
-const card=column.cards.id(cardId);
-if(!card){
-     return res.status(404).json({ message: 'Card not found' });
-}
-if(!Array.isArray(card.label))card.label=[];
-card.label.push({labelTitle,labelColor});
-await column.save();
- return res.status(200).json({
-    status:'SUCCESS',
-    message:"Label added to card successfully",
-    column});
-}catch(error){
-        return res.status(500).json({message:error.message});
-    }
-};
 
+//get particular card info
 export const getCardData = async (req, res) => {
     try {
         const { id: cardId } = req.params;
@@ -106,6 +81,53 @@ export const getCardData = async (req, res) => {
         return res.status(500).json({
             success: false,
             message: 'Internal server error'
+        });
+    }
+};
+
+
+export const updateCardLables = async (req, res) => {
+    const { cardId } = req.params;
+    const { labels } = req.body; 
+    
+    try {
+ 
+        const column = await Column.findOne({
+            userId: req.user.id,
+            'cards._id': cardId
+        });
+        
+        if (!column) {
+            return res.status(404).json({ message: 'Card not found' });
+        }
+        
+        const card = column.cards.id(cardId);
+        if (!card) {
+            return res.status(404).json({
+                message: 'Card not found'
+            });
+        }
+
+        card.label = Array.isArray(labels) ? labels : [];
+        card.updatedAt = new Date();
+        
+        await column.save();
+        
+        const updatedColumn = await Column.findOne({
+            userId: req.user.id,
+            'cards._id': cardId
+        });
+        const updatedCard = updatedColumn.cards.id(cardId); 
+        return res.status(200).json({
+            status: 'SUCCESS',
+            message: "Card labels updated successfully",
+            card: updatedCard 
+        });
+        
+    } catch (error) {
+        console.error('Error updating card labels:', error);
+        return res.status(500).json({
+            message: error.message
         });
     }
 };
