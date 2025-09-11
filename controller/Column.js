@@ -1,5 +1,5 @@
 import Column from "../Model/Column.model.js";
-// fetch columns all cards data
+
 export const getColumn=async(req ,res)=>{  
 const columns=await Column.find();
 return res.status(200).json({
@@ -59,7 +59,7 @@ export const getCardData = async (req, res) => {
         if (!column) {
             return res.status(404).json({
                 success: false,
-                message: 'Card not found'
+                message: 'Card not found '
             });
         }
         const card = column.cards.id(cardId);
@@ -131,3 +131,41 @@ export const updateCardLables = async (req, res) => {
         });
     }
 };
+
+
+export const updateCardDates = async (req, res) => {
+    const { cardId } = req.params;
+    const { startDate, dueDate } = req.body;
+    try {
+        const column = await Column.findOne({
+            userId: req.user.id,
+            'cards._id': cardId
+        });
+
+        if (!column) {
+            return res.status(404).json({ message: 'Column not found' });
+        }
+
+        const card = column.cards.id(cardId);
+        if (!card) {
+            return res.status(404).json({ message: 'Card not found' });
+        }
+
+        if (startDate) card.startDate = new Date(startDate);
+        if (dueDate) card.dueDate = new Date(dueDate);
+        card.updatedAt = new Date();
+
+        await column.save();
+
+        return res.status(200).json({
+            status: 'SUCCESS',
+            message: 'Card dates updated successfully',
+            card
+        });
+    } catch (error) {
+        console.error('Error updating card dates:', error);
+        return res.status(500).json({ message: error.message });
+    }
+};
+
+
