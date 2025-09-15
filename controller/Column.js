@@ -168,4 +168,31 @@ export const updateCardDates = async (req, res) => {
     }
 };
 
+export const deleteCardsDate=async(req,res)=>{
+    const {cardId}=req.params;
+    try{
+        const column=await Column.findOne({
+            userId:req.user.id,
+            'cards._id':cardId
+        });
+        if(!column){
+             return res.status(404).json({ message: 'Column not found' });
+        }
+        const card=column.cards.id(cardId);
+        if(!card){
+                  return res.status(404).json({ message: 'Card not found' });
+        }
 
+        card.startDate=null;
+        card.dueDate=null;
+        card.updatedAt=new Date();
+        await column.save();
+         return res.status(200).json({
+      status: 'SUCCESS',
+      message: 'Card dates deleted successfully',
+      card
+    });
+    }catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+}
