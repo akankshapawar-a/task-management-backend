@@ -28,14 +28,14 @@ export const createColumn=async(req,res)=>{
 //add cards while clicing on cards
 export const addCard=async(req,res)=>{
 const {columnId}=req.params;
-const{title,color,label,startDate,dueDate,attachments,createdAt,updatedAt}=req.body;
+const{title,color,label,startDate,dueDate,attachments,description,createdAt,updatedAt}=req.body;
 try{
 const column=await Column.findById(columnId);
 console.log('column',column);
 console.log('console',columnId);
 if(!column || column.userId.toString() !== req.user.id)
     return res.status(403).json({message:'Not allowed'});
-column.cards.push({title,color,label,startDate,dueDate,attachments,createdAt,updatedAt});
+column.cards.push({title,color,label,startDate,dueDate,attachments,description,createdAt,updatedAt});
 await column.save();
  return res.status(200).json({
     status:'SUCCESS',
@@ -195,4 +195,34 @@ export const deleteCardsDate=async(req,res)=>{
     }catch (error) {
     return res.status(500).json({ message: error.message });
   }
+}
+
+export const updatedDescription=async(req,res)=>{
+    const {cardId}=req.params;
+    const {description}=req.body;
+    try{
+     const column=await Column.findOne({
+        userId:req.user.id,
+        'cards._id':cardId
+     });
+      if (!column) {
+            return res.status(404).json({ message: 'Column not found' });
+        }
+          const card = column.cards.id(cardId);
+        if (!card) {
+            return res.status(404).json({ message: 'Card not found' });
+        }
+        if(description) card.description=description;
+        card.updatedAt=new Date();
+        await column.save();
+
+        return res.status(200).json({
+            status: 'SUCCESS',
+            message: 'Description Updated Successfully',
+            card
+        });
+    }catch (error) {
+        console.error('Error updating card dates:', error);
+        return res.status(500).json({ message: error.message });
+    }
 }

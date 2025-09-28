@@ -16,6 +16,7 @@ const CardSchema=new mongoose.Schema({
     startDate:{type:Date,default:''},
     dueDate:{type:Date ,default:''},
     attachments:[AttachmentSchema],
+    description:{type:String,default:''},
     createdAt:{type:Date,default:Date.now},
     updatedAt:{type:Date,default:Date.now},
 },{_id:true});
