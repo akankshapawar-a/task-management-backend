@@ -85,7 +85,7 @@ export const getCardData = async (req, res) => {
     }
 };
 
-
+//add and update labales
 export const updateCardLables = async (req, res) => {
     const { cardId } = req.params;
     const { labels } = req.body; 
@@ -132,7 +132,7 @@ export const updateCardLables = async (req, res) => {
     }
 };
 
-
+//update cards dates 
 export const updateCardDates = async (req, res) => {
     const { cardId } = req.params;
     const { startDate, dueDate } = req.body;
@@ -168,6 +168,7 @@ export const updateCardDates = async (req, res) => {
     }
 };
 
+//delete card date
 export const deleteCardsDate=async(req,res)=>{
     const {cardId}=req.params;
     try{
@@ -197,6 +198,7 @@ export const deleteCardsDate=async(req,res)=>{
   }
 }
 
+//updated description 
 export const updatedDescription=async(req,res)=>{
     const {cardId}=req.params;
     const {description}=req.body;

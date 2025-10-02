@@ -4,6 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import userRoute from './Roue/routes.js';
 import boardRouter from './Roue/board.js';
+import commentRouter from './Roue/comment.js';
 
 dotenv.config();
 const port=5000;
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use(cors());
 app.use('/api',userRoute);
 app.use('/api',boardRouter);
+app.use('/api',commentRouter);
 
 app.listen(port,()=>{
     console.log(`http://localhost:${port}`);
