@@ -1,4 +1,4 @@
-import Column from "../Model/Column.model.js";
+import Column from "../Model/Column.js";
 
 export const getColumn=async(req ,res)=>{  
 const columns=await Column.find();
