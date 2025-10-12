@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import userRoute from './Roue/routes.js';
 import boardRouter from './Roue/board.js';
 import commentRouter from './Roue/comment.js';
+import attachmentRoutes from './Roue/attachmentRoutes.js'
 
 dotenv.config();
 const port=5000;
@@ -18,11 +19,16 @@ console.log('Sucessfully connect with mongodb')).catch((error)=>{
 
 app.use(express.json());
 app.use(cors());
+
+app.use('/uploads', express.static('uploads'));
+
 app.use('/api',userRoute);
 app.use('/api',boardRouter);
 app.use('/api',commentRouter);
+app.use('/api/attachments', attachmentRoutes);
 
 app.listen(port,()=>{
     console.log(`http://localhost:${port}`);
 })
+
 
