@@ -2,7 +2,7 @@
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
-import Column from '../Model/Column.js'; // Note: .js extension required for ES modules
+import Column from '../Model/Column.model.js'
 
 // Configure multer for file upload
 const storage = multer.diskStorage({

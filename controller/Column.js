@@ -1,4 +1,4 @@
-import Column from "../Model/Column.js";
+import Column from "../Model/Column.model.js";
 
 export const getColumn=async(req ,res)=>{  
 const columns=await Column.find();
@@ -255,6 +255,36 @@ export const updateCardComplete=async(req,res)=>{
  }catch (error) {
     console.error('Error updating card completion:', error);
     return res.status(500).json({ message: error.message });
+  }
+}
+
+
+export const deleteCard=async(req,res)=>{
+    const {cardId}=req.params;
+    try{
+        const column=await Column.findOne({
+            userId:req.user.id,
+            'cards._id':cardId
+        });
+          if (!column) {
+      return res.status(404).json({ message: 'Column not found or unauthorized' });
+    }
+     column.cards = column.cards.filter(
+      (card) => card._id.toString() !== cardId
+    );
+    await column.save();
+
+    return res.status(200).json({
+      status: 'SUCCESS',
+      message: 'Card deleted successfully',
+      column,
+    });
+    }catch (error) {
+    console.error('Error deleting card:', error);
+    return res.status(500).json({
+      status: 'FAILED',
+      message: error.message,
+    });
   }
 }
 
