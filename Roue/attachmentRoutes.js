@@ -1,4 +1,4 @@
-// Roue/attachmentRoutes.js (note: it's Route not Roue)
+
 import express from 'express';
 import {
   upload,
@@ -23,10 +23,3 @@ router.delete('/:cardId/:attachmentId', deleteAttachment);
 router.get('/:cardId/:attachmentId/download', downloadAttachment);
 
 export default router;
-
-
-// In your main app.js or server.js, add:
-// import attachmentRoutes from './Roue/attachmentRoutes.js';
-// import express from 'express';
-// app.use('/api/attachments', attachmentRoutes);
-// app.use('/uploads', express.static('uploads'));
